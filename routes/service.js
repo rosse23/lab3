@@ -59,15 +59,18 @@ router.post('/divisas', function(req, res, next) {
               'KRW',1193.9107516132,
               'PLN',3.9819140234,
               'BO',6.96];
-  var datos= req.body;
-  var monO= monedas.indexOf(datos.MonedaOriginal)+1;
-  var cant=datos.Cantidad;
-  var monC= monedas.indexOf(datos.MonedadeCambio)+1;
-  var camb= (parseFloat(cant)/monedas[monO])*monedas[monC];
-  datos['CantidadConvertida']=camb;
-  res.status(200).json(datos);
-  });
+      var datos= req.body;
+      var monO= monedas.indexOf(datos.MonedaOriginal)+1;
+      var cant=datos.Cantidad;
+      var monC= monedas.indexOf(datos.MonedadeCambio)+1;
+      if (monO!=0 && monC!=0){
+        var camb= (parseFloat(cant)/monedas[monO])*monedas[monC];
+        datos['CantidadConvertida']=camb;
+        res.status(200).json(datos);
+      }else
+        res.status(300).json({msn: "Verifique los tipos de moneda"});
 
+});
   /*Calculo de interes compuesto
       a. Este servicio recibirá 3 parámetros, el monto que se solicita, y el tipo de
       interés anual, y el tiempo de pago.
